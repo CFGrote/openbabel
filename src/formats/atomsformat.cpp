@@ -1,5 +1,5 @@
 /**********************************************************************
-Copyright (C) 2004 by Chris Morley
+Copyright (C) 2017 by Carsten Fortmann-Grote <cfg@posteo.de>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,17 +37,17 @@ using namespace std;
 namespace OpenBabel
 {
 
-class XXXFormat : public OBMoleculeFormat
+class AtomsFormat : public OBMoleculeFormat
 // Derive directly from OBFormat for objects which are not molecules.
 {
 public:
 	//Register this format type ID in the constructor
-  XXXFormat()
+  AtomsFormat()
 	{
 		/* XXX is the file extension and is case insensitive. A MIME type can be
 		   added as an optional third parameter.
 		   Multiple file extensions can be registered by adding extra statements.*/
-		OBConversion::RegisterFormat("XXX",this);
+		OBConversion::RegisterFormat("atoms",this);
 
 		/* If there are any format specific options they should be registered here
 		   so that the commandline interface works properly.
@@ -70,9 +70,9 @@ public:
 		   between formats. A list of formats currently used (which may not be
 		   comprehensive) is in docs/options.html.
 		*/
-		OBConversion::RegisterOptionParam("f", this, 1);
-		OBConversion::RegisterOptionParam("n", this);
-		OBConversion::RegisterOptionParam("s", this, 0, OBConversion::INOPTIONS);
+        //OBConversion::RegisterOptionParam("f", this, 1);
+        //OBConversion::RegisterOptionParam("n", this);
+        //OBConversion::RegisterOptionParam("s", this, 0, OBConversion::INOPTIONS);
 
 	}
 
@@ -92,43 +92,43 @@ public:
 	virtual const char* Description() //required
 	{
 		return
-		"XXX format\n"
-		"Some comments here, on as many lines as necessay\n"
-		"Write Options e.g. -xf3 \n"
-		"	f# Number of (fictional) levels\n"
-		"	n  Omit (virtual) title\n\n"
-		
-		"Read Options e.g. -as\n"
-		"	s  Consider single bonds only\n"
+		"FEFF atoms format\n"
+		"Format to describe atomic environment of the absorbing atom in a FEFF XAFS calculation.\n"
+		//"Write Options e.g. -xf3 \n"
+		//"	f# Number of (fictional) levels\n"
+		//"	n  Omit (virtual) title\n\n"
+
+        //"Read Options e.g. -as\n"
+        //"	s  Consider single bonds only\n"
 		;
   };
 
   //Optional URL where the file format is specified
-	virtual const char* SpecificationURL(){return
-     "http://www.mdl.com/downloads/public/ctfile/ctfile.jsp";};
+	//virtual const char* SpecificationURL(){return
+     //"http://www.mdl.com/downloads/public/ctfile/ctfile.jsp";};
 
   //Optional
-	virtual const char* GetMIMEType()
-  { return "chemical/x-xxx"; };
+	//virtual const char* GetMIMEType()
+  //{ return "chemical/x-xxx"; };
 
 
   /* Flags() can return be any of the following combined by |
 	   or be omitted if none apply
      NOTREADABLE  READONEONLY  NOTWRITABLE  WRITEONEONLY  DEFAULTFORMAT
      READBINARY  WRITEBINARY  READXML  ZEROATOMSOK*/
-  virtual unsigned int Flags()
-  {
-      return READONEONLY;
-  };
+  //virtual unsigned int Flags()
+  //{
+      //return READONEONLY;
+  //};
 
  	/* This optional function is for formats which can contain more than one
 	   molecule. It is used to quickly position the input stream after the nth
 	   molecule without have to convert and discard all the n molecules.
 	   See obconversion.cpp for details and mdlformat.cpp for an example.*/
-	virtual int SkipObjects(int n, OBConversion* pConv)
-	{
-		return 0;
-	};
+	//virtual int SkipObjects(int n, OBConversion* pConv)
+	//{
+		//return 0;
+	//};
 
 	////////////////////////////////////////////////////
   /// Declarations for the "API" interface functions. Definitions are below
@@ -143,11 +143,11 @@ private:
 	////////////////////////////////////////////////////
 
 //Make an instance of the format class
-XXXFormat theXXXFormat;
+AtomsFormat theAtomsFormat;
 
 /////////////////////////////////////////////////////////////////
 
-bool XXXFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
+bool AtomsFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
 {
   OBMol* pmol = pOb->CastAndClear<OBMol>();
   if(pmol==NULL)
@@ -180,13 +180,14 @@ bool XXXFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
 	   this will skip the current molecule and continue with the next, if SkipObjects()
 	   has been defined. If it has not, and continuation after errors is still required,
 	   it is necessary to leave the input stream at the beginning of next object when
-	   returning false;*/
+	   returning false;
+       */
 	return true;
 }
 
 ////////////////////////////////////////////////////////////////
 
-bool XXXFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
+bool AtomsFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 {
   OBMol* pmol = dynamic_cast<OBMol*>(pOb);
   if(pmol==NULL)
